@@ -27,12 +27,24 @@ export function Hero() {
 
   return (
     <div className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center overflow-hidden pt-20" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4)' }}>
-      {/* Animated overlay with gradient */}
+      {/* Animated gradient overlay */}
       <motion.div 
-        className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60"
+        className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/70 to-black/80"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
+      />
+
+      {/* Floating glass elements */}
+      <motion.div 
+        className="absolute top-10 left-10 w-72 h-72 glass rounded-full blur-3xl opacity-20"
+        animate={{ y: [0, 30, 0] }}
+        transition={{ duration: 8, repeat: Infinity }}
+      />
+      <motion.div 
+        className="absolute bottom-20 right-20 w-96 h-96 glass rounded-full blur-3xl opacity-15"
+        animate={{ y: [0, -30, 0] }}
+        transition={{ duration: 10, repeat: Infinity }}
       />
 
       {/* Content */}
@@ -42,19 +54,19 @@ export function Hero() {
         initial="hidden"
         animate="visible"
       >
-        <div className="max-w-3xl">
+        <div className="max-w-4xl">
           <motion.h1 
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight gradient-text"
             variants={itemVariants}
           >
-            Discover Nepal with Goodtime Adventure
+            Discover Nepal
           </motion.h1>
-          
+
           <motion.p 
-            className="text-lg md:text-xl lg:text-2xl mb-8 text-gray-100 font-light"
+            className="text-lg md:text-2xl lg:text-3xl mb-8 text-white/80 font-light leading-relaxed"
             variants={itemVariants}
           >
-            Experience the best trekking adventures in the Himalayas
+            Experience premium trekking adventures in the majestic Himalayas with Goodtime Adventure
           </motion.p>
 
           <motion.div
@@ -63,7 +75,7 @@ export function Hero() {
           >
             <Link href="/tours">
               <Button 
-                className="bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl px-8 py-3 text-lg"
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-2xl border-0 px-8 py-4 text-lg font-semibold"
               >
                 Explore Tours
               </Button>
@@ -71,7 +83,7 @@ export function Hero() {
             <Link href="/contact">
               <Button 
                 variant="outline"
-                className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg"
+                className="glass text-white border-white/30 hover:bg-white/10 px-8 py-4 text-lg font-semibold"
               >
                 Get in Touch
               </Button>

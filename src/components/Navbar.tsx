@@ -34,22 +34,22 @@ export function Navbar() {
 
   return (
     <motion.nav 
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 shadow-2xl"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
-            Goodtime
+          <Link href="/" className="text-3xl font-black gradient-text hover:scale-110 transition-transform duration-300">
+            GT
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             <motion.div
-              className="flex items-center space-x-1"
+              className="flex items-center space-x-2"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -58,9 +58,10 @@ export function Navbar() {
                 <motion.div key={link.href} variants={itemVariants}>
                   <Link 
                     href={link.href}
-                    className="px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 font-medium transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="px-4 py-2 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover group relative"
                   >
                     {link.label}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-300"></span>
                   </Link>
                 </motion.div>
               ))}
@@ -72,18 +73,18 @@ export function Navbar() {
             className="hidden md:flex items-center space-x-2"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5 }}
           >
             {session ? (
               <>
                 {session.user.role === 'admin' && (
-                  <Link href="/admin" className="px-3 py-2 text-gray-700 dark:text-gray-300 font-medium hover:text-blue-500 transition-colors">Admin</Link>
+                  <Link href="/admin" className="px-4 py-2 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Admin</Link>
                 )}
-                <Link href="/wishlist" className="px-3 py-2 text-gray-700 dark:text-gray-300 font-medium hover:text-blue-500 transition-colors">Wishlist</Link>
-                <Link href="/account/enquiries" className="px-3 py-2 text-gray-700 dark:text-gray-300 font-medium hover:text-blue-500 transition-colors">Enquiries</Link>
+                <Link href="/wishlist" className="px-4 py-2 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Wishlist</Link>
+                <Link href="/account/enquiries" className="px-4 py-2 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Enquiries</Link>
                 <Button 
                   onClick={() => signOut()} 
-                  className="bg-red-500 hover:bg-red-600 text-white"
+                  className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white border-0 shadow-lg hover:shadow-xl"
                   size="sm"
                 >
                   Logout
@@ -92,10 +93,10 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">Login</Button>
+                  <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10">Login</Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm">Register</Button>
+                  <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0">Register</Button>
                 </Link>
               </>
             )}
@@ -108,15 +109,15 @@ export function Navbar() {
           >
             <div className="space-y-1.5">
               <motion.div 
-                className="w-6 h-0.5 bg-gray-700 dark:bg-gray-300"
+                className="w-6 h-0.5 bg-white"
                 animate={isOpen ? { rotate: 45, y: 12 } : { rotate: 0, y: 0 }}
               />
               <motion.div 
-                className="w-6 h-0.5 bg-gray-700 dark:bg-gray-300"
+                className="w-6 h-0.5 bg-white"
                 animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
               />
               <motion.div 
-                className="w-6 h-0.5 bg-gray-700 dark:bg-gray-300"
+                className="w-6 h-0.5 bg-white"
                 animate={isOpen ? { rotate: -45, y: -12 } : { rotate: 0, y: 0 }}
               />
             </div>
@@ -130,12 +131,12 @@ export function Navbar() {
           animate={{ height: isOpen ? 'auto' : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="py-4 space-y-2 border-t border-gray-200 dark:border-gray-800">
+          <div className="py-4 space-y-2 border-t border-white/10 mt-4">
             {navLinks.map((link) => (
               <Link 
                 key={link.href}
                 href={link.href}
-                className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors"
+                className="block px-4 py-3 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover"
               >
                 {link.label}
               </Link>
@@ -143,16 +144,16 @@ export function Navbar() {
             {session ? (
               <>
                 {session.user.role === 'admin' && (
-                  <Link href="/admin" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium">Admin</Link>
+                  <Link href="/admin" className="block px-4 py-3 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Admin</Link>
                 )}
-                <Link href="/wishlist" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium">Wishlist</Link>
-                <Link href="/account/enquiries" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg font-medium">My Enquiries</Link>
+                <Link href="/wishlist" className="block px-4 py-3 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Wishlist</Link>
+                <Link href="/account/enquiries" className="block px-4 py-3 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">My Enquiries</Link>
                 <Button 
                   onClick={() => {
                     signOut()
                     setIsOpen(false)
                   }} 
-                  className="w-full mt-2 bg-red-500 hover:bg-red-600 text-white"
+                  className="w-full mt-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white border-0"
                   size="sm"
                 >
                   Logout
@@ -161,10 +162,10 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/login" className="block">
-                  <Button variant="outline" size="sm" className="w-full">Login</Button>
+                  <Button variant="outline" size="sm" className="w-full text-white border-white/20 hover:bg-white/10">Login</Button>
                 </Link>
                 <Link href="/register" className="block">
-                  <Button size="sm" className="w-full">Register</Button>
+                  <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0">Register</Button>
                 </Link>
               </>
             )}

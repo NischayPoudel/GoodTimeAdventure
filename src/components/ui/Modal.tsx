@@ -34,7 +34,7 @@ export function Modal({ isOpen, onClose, children, title }: ModalProps) {
         >
           {/* Backdrop */}
           <motion.div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 glass-dark"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -43,7 +43,7 @@ export function Modal({ isOpen, onClose, children, title }: ModalProps) {
           
           {/* Modal */}
           <motion.div 
-            className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-200 dark:border-gray-800"
+            className="relative glass rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-white/20 text-white"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -51,11 +51,11 @@ export function Modal({ isOpen, onClose, children, title }: ModalProps) {
           >
             {/* Header */}
             {title && (
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+              <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                  className="text-white/60 hover:text-white transition-colors"
                   aria-label="Close modal"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
