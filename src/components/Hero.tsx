@@ -26,7 +26,7 @@ export function Hero() {
   }
 
   return (
-    <div className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center overflow-hidden pt-20" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4)' }}>
+    <div className="relative w-full h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4)' }}>
       {/* Professional gradient overlay */}
       <motion.div 
         className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black/75"
@@ -49,7 +49,7 @@ export function Hero() {
 
       {/* Content */}
       <motion.div
-        className="relative z-10 flex items-center justify-center h-full text-white text-center px-4"
+        className="relative z-10 flex items-center justify-center w-full h-full text-white text-center px-4"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
