@@ -68,14 +68,14 @@ export function Navbar() {
             </motion.div>
           </div>
 
-          {/* Auth Links */}
+          {/* Auth Links - Only show for logged in users */}
           <motion.div 
             className="hidden md:flex items-center space-x-2"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {session ? (
+            {session && (
               <>
                 {session.user.role === 'admin' && (
                   <Link href="/admin" className="px-4 py-2 text-white/80 hover:text-white font-medium transition-all duration-300 rounded-lg glass-light glass-hover">Admin</Link>
@@ -89,15 +89,6 @@ export function Navbar() {
                 >
                   Logout
                 </Button>
-              </>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10">Login</Button>
-                </Link>
-                <Link href="/register">
-                  <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0">Register</Button>
-                </Link>
               </>
             )}
           </motion.div>
@@ -159,16 +150,7 @@ export function Navbar() {
                   Logout
                 </Button>
               </>
-            ) : (
-              <>
-                <Link href="/login" className="block">
-                  <Button variant="outline" size="sm" className="w-full text-white border-white/20 hover:bg-white/10">Login</Button>
-                </Link>
-                <Link href="/register" className="block">
-                  <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white border-0">Register</Button>
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
         </motion.div>
       </div>

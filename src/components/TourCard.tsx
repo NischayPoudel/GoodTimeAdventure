@@ -29,6 +29,8 @@ export function TourCard({ tour }: TourCardProps) {
       viewport={{ once: true, margin: '-50px' }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
       className="group"
+      data-aos="fade-up"
+      data-aos-delay="0"
     >
       <Link href={`/tours/${tour.slug}`}>
         <div className="glass rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-500 hover:bg-white/12 border border-white/10 group">

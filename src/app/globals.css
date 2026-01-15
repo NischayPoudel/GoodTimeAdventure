@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: 210 20% 5%;
+  --background: 12 15% 8%;
   --foreground: 210 40% 98%;
-  --primary: 200 100% 50%;
-  --secondary: 280 90% 60%;
-  --accent: 320 100% 55%;
+  --primary: 200 100% 45%;
+  --secondary: 200 80% 40%;
+  --accent: 280 90% 60%;
   --glass-light: rgba(255, 255, 255, 0.1);
   --glass-medium: rgba(255, 255, 255, 0.15);
   --glass-dark: rgba(255, 255, 255, 0.08);
@@ -39,7 +39,7 @@ html {
 }
 
 body {
-  background: linear-gradient(135deg, #0f1729 0%, #1a2340 50%, #0f1829 100%);
+  background: linear-gradient(135deg, #0a0e1a 0%, #141b2d 50%, #0a0d18 100%);
   color: hsl(var(--foreground));
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -57,7 +57,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
 }

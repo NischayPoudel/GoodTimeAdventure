@@ -1,11 +1,8 @@
-'use client'
-
-import { SessionProvider } from 'next-auth/react'
 import { useEffect } from 'react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function useAOS() {
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -14,7 +11,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       offset: 100,
       disable: 'mobile'
     })
+    
+    return () => {
+      AOS.refresh()
+    }
   }, [])
-
-  return <SessionProvider>{children}</SessionProvider>
 }
