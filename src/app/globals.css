@@ -1,52 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: 12 15% 8%;
-  --foreground: 210 40% 98%;
-  --primary: 200 100% 45%;
-  --secondary: 200 80% 40%;
-  --accent: 280 90% 60%;
-  --glass-light: rgba(255, 255, 255, 0.1);
-  --glass-medium: rgba(255, 255, 255, 0.15);
-  --glass-dark: rgba(255, 255, 255, 0.08);
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.6%;
+    --primary: 142 71% 45%;
+    --secondary: 186 100% 50%;
+    --accent: 280 90% 60%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    font-feature-settings: "kern";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
-@theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-secondary: hsl(var(--secondary));
-  --color-accent: hsl(var(--accent));
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
-  
-  --animation-duration-fast: 150ms;
-  --animation-duration-normal: 300ms;
-  --animation-duration-slow: 500ms;
-  
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
-  --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-}
+@layer components {
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/40 backdrop-blur-md border border-white/30;
+  }
 
-* {
-  @apply transition-all duration-300;
-}
+  .glass-light {
+    @apply bg-white/20 backdrop-blur-sm border border-white/20;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-500 bg-clip-text text-transparent;
+  }
 
-body {
-  background: linear-gradient(135deg, #0a0e1a 0%, #141b2d 50%, #0a0d18 100%);
-  color: hsl(var(--foreground));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "kern";
-  position: relative;
-  overflow-x: hidden;
+  /* Smooth transitions */
+  * {
+    @apply transition-colors duration-300;
+  }
+
+  /* Focus ring for accessibility */
+  button:focus-visible,
+  a:focus-visible {
+    @apply outline-none ring-2 ring-emerald-500 ring-offset-2 rounded-lg;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400;
+  }
+
+  ::-webkit-scrollbar-thumb:window-inactive {
+    @apply bg-gray-200;
+  }
 }
 
 /* Animated background gradient */
