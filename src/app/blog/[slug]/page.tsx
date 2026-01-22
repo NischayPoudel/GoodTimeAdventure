@@ -14,16 +14,19 @@ export default async function BlogPostPage({
     return <div className="container mx-auto px-4 py-8">Post not found</div>
   }
 
+  // Convert to plain object to avoid serialization issues
+  const postData = JSON.parse(JSON.stringify(post))
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl pt-32">
       <article>
         <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-          <p className="text-gray-600">{new Date(post.createdAt).toDateString()}</p>
+          <h1 className="text-4xl font-bold mb-4">{postData.title}</h1>
+          <p className="text-gray-600">{new Date(postData.createdAt).toDateString()}</p>
         </header>
         <div className="prose max-w-none">
-          <p className="text-lg mb-6">{post.excerpt}</p>
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <p className="text-lg mb-6">{postData.excerpt}</p>
+          <div dangerouslySetInnerHTML={{ __html: postData.content }} />
         </div>
       </article>
     </div>
