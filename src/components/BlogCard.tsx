@@ -11,9 +11,10 @@ interface BlogCardProps {
     title: string
     slug: string
     excerpt: string
-    coverImage: string
-    tags: string[]
-    createdAt: Date
+    coverImage?: string
+    image?: string
+    tags?: string[]
+    createdAt: Date | string
   }
 }
 
@@ -38,7 +39,7 @@ export function BlogCard({ post }: BlogCardProps) {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
             >
-              <Image src={post.coverImage} alt={post.title} fill className="object-cover transition-all duration-300" />
+              <Image src={post.coverImage || post.image || ''} alt={post.title} fill className="object-cover transition-all duration-300" />
             </motion.div>
           </div>
 
@@ -57,7 +58,7 @@ export function BlogCard({ post }: BlogCardProps) {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
-              {post.tags.slice(0, 2).map((tag) => (
+              {post.tags && post.tags.slice(0, 2).map((tag) => (
                 <span key={tag} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium border border-gray-200">{tag}</span>
               ))}
             </div>
