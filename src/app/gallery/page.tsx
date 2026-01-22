@@ -4,7 +4,7 @@ import { GalleryGrid } from '@/components/GalleryGrid'
 
 export default async function GalleryPage() {
   await connectDB()
-  const items = await GalleryItem.find().sort({ createdAt: -1 })
+  const items = await GalleryItem.find().sort({ createdAt: -1 }).lean()
 
   return (
     <div className="container mx-auto px-4 py-8">

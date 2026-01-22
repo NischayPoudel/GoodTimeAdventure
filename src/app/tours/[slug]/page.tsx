@@ -10,7 +10,7 @@ export default async function TourDetailPage({
   params: { slug: string }
 }) {
   await connectDB()
-  const tour = await Tour.findOne({ slug: params.slug, published: true })
+  const tour = await Tour.findOne({ slug: params.slug, published: true }).lean()
   if (!tour) return <div>Tour not found</div>
 
   return (
