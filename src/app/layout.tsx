@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { TopBar } from '@/components/TopBar'
 import { SiteNavbar } from '@/components/site-navbar'
 import { Footer } from '@/components/Footer'
 import { Providers } from '@/components/Providers'
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} ${geistMono.variable} antialiased bg-white`}>
         <Providers>
+          <TopBar />
           <SiteNavbar />
           <main className="min-h-screen">
             {children}

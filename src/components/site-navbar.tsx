@@ -19,27 +19,19 @@ interface DropdownCategory {
 
 const activitiesDropdown: DropdownCategory[] = [
   {
-    title: 'Trekking',
+    title: 'Popular Treks',
     items: [
-      { icon: '⛏️', title: 'Everest Base Camp', description: 'Legendary Himalayan trek' },
-      { icon: '🏔️', title: 'Annapurna Circuit', description: 'Stunning mountain loop' },
-      { icon: '🌲', title: 'Langtang Valley', description: 'Intimate alpine experience' },
+      { icon: '', title: 'Everest Base Camp', description: 'Legendary Himalayan trek' },
+      { icon: '', title: 'Annapurna Circuit', description: 'Stunning mountain loop' },
+      { icon: '', title: 'Langtang Valley', description: 'Intimate alpine experience' },
     ],
   },
   {
-    title: 'Tours',
+    title: 'Cultural Tours',
     items: [
-      { icon: '🏛️', title: 'Kathmandu Heritage', description: 'Ancient temples & culture' },
-      { icon: '🌅', title: 'Pokhara Highlights', description: 'Lakes & mountain views' },
-      { icon: '🐅', title: 'Chitwan Safari', description: 'Wildlife adventure' },
-    ],
-  },
-  {
-    title: 'Adventure',
-    items: [
-      { icon: '🪂', title: 'Paragliding', description: 'Fly over mountains' },
-      { icon: '🚣', title: 'Rafting', description: 'White water thrills' },
-      { icon: '🧗', title: 'Peak Climbing', description: 'Summit the peaks' },
+      { icon: '', title: 'Kathmandu Heritage', description: 'Ancient temples & culture' },
+      { icon: '', title: 'Pokhara Highlights', description: 'Lakes & mountain views' },
+      { icon: '', title: 'Chitwan Safari', description: 'Wildlife adventure' },
     ],
   },
 ]
@@ -65,17 +57,17 @@ export function SiteNavbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-12 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm'
-            : 'bg-white/40 backdrop-blur-sm border-b border-white/20'
+            ? 'bg-white border-b border-gray-200'
+            : 'bg-white border-b border-gray-100'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 via-cyan-400 to-blue-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+              <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
                 <span className="text-white font-bold text-lg">⛰️</span>
               </div>
               <span className="font-bold text-gray-900 text-lg hidden sm:inline">Goodtime Adventure</span>
@@ -83,15 +75,18 @@ export function SiteNavbar() {
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-1">
-<div
+              <div
                 className="relative"
                 onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
               >
-                <button className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm transition-colors flex items-center gap-1 group">
-                  Activities
+                <Link 
+                  href="/activities"
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm transition-colors flex items-center gap-1 group"
+                >
+                  Treks
                   <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                </button>
+                </Link>
 
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
@@ -107,9 +102,10 @@ export function SiteNavbar() {
                           <h3 className="font-semibold text-gray-900 mb-4 text-sm">{category.title}</h3>
                           <div className="space-y-3">
                             {category.items.map((item) => (
-                              <button
+                              <Link
                                 key={item.title}
-                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group/item"
+                                href="/activities"
+                                className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors group/item block"
                               >
                                 <div className="flex items-start gap-2">
                                   <span className="text-lg flex-shrink-0 mt-0.5">{item.icon}</span>
@@ -120,7 +116,7 @@ export function SiteNavbar() {
                                     <p className="text-xs text-gray-600">{item.description}</p>
                                   </div>
                                 </div>
-                              </button>
+                              </Link>
                             ))}
                           </div>
                         </div>
@@ -152,10 +148,10 @@ export function SiteNavbar() {
 
             {/* Desktop CTA Buttons */}
             <div className="hidden md:flex items-center gap-3">
-              <button className="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
+              <button className="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                 View Packages
               </button>
-              <button className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium text-sm rounded-full hover:shadow-lg transition-shadow">
+              <button className="px-6 py-2 bg-gray-900 text-white font-medium text-sm rounded-lg hover:bg-gray-800 transition-colors">
                 Book a Trip
               </button>
             </div>
@@ -205,22 +201,24 @@ export function SiteNavbar() {
 
             {/* Mobile Activities Accordion */}
             <div className="pt-2 border-t border-gray-100">
-              <button
-                onClick={() => setIsMobileActivityOpen(!isMobileActivityOpen)}
+              <Link
+                href="/activities"
                 className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors font-medium flex items-center justify-between"
+                onClick={() => setIsMobileOpen(false)}
               >
                 Activities
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${isMobileActivityOpen ? 'rotate-180' : ''}`}
                 />
-              </button>
+              </Link>
 
               {isMobileActivityOpen && (
                 <div className="ml-4 mt-2 space-y-2 border-l border-gray-200 pl-4">
                   {activitiesDropdown.map((category) =>
                     category.items.map((item) => (
-                      <button
+                      <Link
                         key={item.title}
+                        href="/activities"
                         className="block w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded transition-colors"
                         onClick={() => setIsMobileOpen(false)}
                       >
@@ -231,7 +229,7 @@ export function SiteNavbar() {
                             <p className="text-xs text-gray-500">{item.description}</p>
                           </div>
                         </div>
-                      </button>
+                      </Link>
                     ))
                   )}
                 </div>

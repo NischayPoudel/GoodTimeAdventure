@@ -33,9 +33,9 @@ export function TourCard({ tour }: TourCardProps) {
       data-aos-delay="0"
     >
       <Link href={`/tours/${tour.slug}`}>
-        <div className="glass rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-500 hover:bg-white/12 border border-white/10 group">
+        <div className="rounded-lg overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-300 hover:shadow-lg border border-gray-200 bg-white group">
           {/* Image Container */}
-          <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-500/20 to-purple-500/20">
+          <div className="relative h-56 overflow-hidden bg-gray-200">
             <motion.div
               className="w-full h-full"
               whileHover={{ scale: 1.1 }}
@@ -51,9 +51,9 @@ export function TourCard({ tour }: TourCardProps) {
 
           {/* Content */}
           <div className="p-5 flex flex-col flex-grow">
-            <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-cyan-300 transition-colors">{tour.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors">{tour.title}</h3>
             
-            <div className="flex items-center text-sm text-white/70 mb-3">
+            <div className="flex items-center text-sm text-gray-600 mb-3">
               <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
               </svg>
@@ -61,8 +61,8 @@ export function TourCard({ tour }: TourCardProps) {
             </div>
 
             {/* Duration and Difficulty */}
-            <div className="flex justify-between items-center mb-4 pt-3 border-t border-white/10">
-              <div className="text-sm text-white/70">
+            <div className="flex justify-between items-center mb-4 pt-3 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
                 <svg className="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm0 4a1 1 0 11-2 0 1 1 0 012 0z" />
                 </svg>
@@ -73,12 +73,12 @@ export function TourCard({ tour }: TourCardProps) {
 
             {/* Price and CTA */}
             <div className="mt-auto">
-              <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-3">From ${tour.priceFrom}</p>
+              <p className="text-2xl font-bold text-gray-900 mb-3">From ${tour.priceFrom}</p>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold border-0" size="sm">
+                <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold border-0" size="sm">
                   View Details
                 </Button>
               </motion.div>

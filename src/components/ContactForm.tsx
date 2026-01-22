@@ -11,31 +11,24 @@ export function ContactForm() {
     subject: '',
     message: '',
   })
-  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (response.ok) {
-        alert('Message sent successfully!')
-        setFormData({ name: '', email: '', subject: '', message: '' })
-      } else {
-        alert('Failed to send message')
-      }
-    } catch (error) {
-      console.error('Error sending message:', error)
-      alert('Error sending message')
-    } finally {
-      setLoading(false)
-    }
+    
+    // Create the WhatsApp message with form data
+    const whatsappMessage = `Hi, I'm ${formData.name}\nEmail: ${formData.email}\n\nSubject: ${formData.subject}\n\nMessage: ${formData.message}`
+    
+    // Encode the message for URL
+    const encodedMessage = encodeURIComponent(whatsappMessage)
+    
+    // WhatsApp API URL - phone number should be in format: country code + number without +
+    const whatsappUrl = `https://wa.me/9779846977658?text=${encodedMessage}`
+    
+    // Redirect to WhatsApp
+    window.open(whatsappUrl, '_blank')
+    
+    // Reset form
+    setFormData({ name: '', email: '', subject: '', message: '' })
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -87,8 +80,8 @@ export function ContactForm() {
           required
         />
       </div>
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Sending...' : 'Send Message'}
+      <Button type="submit">
+        Send via WhatsApp
       </Button>
     </form>
   )

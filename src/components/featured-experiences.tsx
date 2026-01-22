@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, MapPin, Clock, Zap } from 'lucide-react'
 
@@ -96,14 +97,11 @@ export function FeaturedExperiences() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200/50 mb-6 hover:border-gray-300 transition-colors">
-            <span className="text-sm font-medium text-gray-700">✨ Featured Experiences</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-4">
-            Discover Your Next Adventure
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Featured Treks
           </h2>
           <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-            Hand-picked treks, tours, and experiences designed for unforgettable moments in the Himalayas.
+            Handpicked adventures for unforgettable mountain experiences
           </p>
         </motion.div>
 
@@ -132,7 +130,7 @@ export function FeaturedExperiences() {
               {/* Content */}
               <div className="p-6 md:p-8">
                 {/* Title */}
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-cyan-500 group-hover:bg-clip-text transition-all">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-all">
                   {exp.title}
                 </h3>
 
@@ -167,19 +165,15 @@ export function FeaturedExperiences() {
                       <span className="text-sm font-normal text-gray-600">/person</span>
                     </p>
                   </div>
-                  <motion.button
-                    whileHover={{ x: 4 }}
-                    className="p-3 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 text-emerald-600 rounded-full hover:bg-gradient-to-r hover:from-emerald-500/20 hover:to-cyan-500/20 transition-all"
-                    aria-label="View details"
-                  >
+                  <Link href="/activities" className="p-3 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 text-emerald-600 rounded-full hover:bg-gradient-to-r hover:from-emerald-500/20 hover:to-cyan-500/20 transition-all">
                     <ArrowRight className="w-5 h-5" />
-                  </motion.button>
+                  </Link>
                 </div>
 
                 {/* View Details Link */}
-                <button className="w-full mt-4 px-4 py-2.5 text-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors">
+                <Link href="/activities" className="block w-full mt-4 px-4 py-2.5 text-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors">
                   View Details →
-                </button>
+                </Link>
               </div>
             </motion.div>
           ))}
@@ -193,10 +187,10 @@ export function FeaturedExperiences() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-16 text-center"
         >
-          <button className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105">
-            Explore All Experiences
+          <Link href="/activities" className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 hover:bg-gray-800">
+            Explore All Treks
             <ArrowRight className="w-5 h-5" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>

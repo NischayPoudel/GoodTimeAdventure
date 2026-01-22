@@ -1,15 +1,73 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { User } from '../src/lib/models/User.ts';
-import { Tour } from '../src/lib/models/Tour.ts';
-import { BlogPost } from '../src/lib/models/BlogPost.ts';
-import { GalleryItem } from '../src/lib/models/GalleryItem.ts';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/goodtime-adventure';
 
+// Define schemas inline
+const itinerarySchema = new mongoose.Schema({
+  day: { type: Number, required: true },
+  title: { type: String, required: true },
+  details: { type: String, required: true },
+});
+
+const tourSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  region: { type: String, required: true },
+  activity: { type: String, required: true },
+  durationDays: { type: Number, required: true },
+  difficulty: { type: String, required: true },
+  maxAltitudeM: { type: Number, required: true },
+  bestSeason: { type: String, required: true },
+  priceFrom: { type: Number, required: true },
+  overview: { type: String, required: true },
+  includes: [{ type: String }],
+  excludes: [{ type: String }],
+  itinerary: [itinerarySchema],
+  published: { type: Boolean, default: false },
+  heroImage: { type: String, required: true },
+  gallery: [{ type: String }],
+  createdAt: { type: Date, default: Date.now },
+});
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  passwordHash: { type: String, required: true },
+  role: { type: String, default: 'user' },
+  wishlist: [{ type: String }],
+  createdAt: { type: Date, default: Date.now },
+});
+
+const blogPostSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  excerpt: { type: String },
+  content: { type: String, required: true },
+  coverImage: { type: String },
+  tags: [{ type: String }],
+  published: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const galleryItemSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  imageUrl: { type: String, required: true },
+  category: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const Tour = mongoose.models.Tour || mongoose.model('Tour', tourSchema);
+const BlogPost = mongoose.models.BlogPost || mongoose.model('BlogPost', blogPostSchema);
+const GalleryItem = mongoose.models.GalleryItem || mongoose.model('GalleryItem', galleryItemSchema);
+
 async function seed() {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      writeConcern: { w: 1 },
+      journal: false
+    });
     console.log('Connected to MongoDB');
 
     // Clear existing data
@@ -17,6 +75,7 @@ async function seed() {
     await Tour.deleteMany({});
     await BlogPost.deleteMany({});
     await GalleryItem.deleteMany({});
+    console.log('✓ Cleared existing collections');
 
     // Create admin user
     const hashedPassword = await bcrypt.hash('Admin123!', 12);
@@ -27,6 +86,7 @@ async function seed() {
       role: 'admin',
       wishlist: [],
     });
+    console.log('✓ Admin user created');
 
     // Create sample tours
     const tours = [
@@ -112,18 +172,6 @@ async function seed() {
           { day: 1, title: 'Arrival in Pokhara', details: 'Start in Pokhara' },
           { day: 2, title: 'Pokhara to Bhulbhule', details: 'Trek through rice fields' },
           { day: 3, title: 'Bhulbhule to Besisahar', details: 'Forest trail and river valley' },
-          { day: 4, title: 'Besisahar to Bahundanda', details: 'Climb to viewpoint' },
-          { day: 5, title: 'Bahundanda to Chame', details: 'Pine forest and mountain views' },
-          { day: 6, title: 'Chame to Pisang', details: 'Higher altitude trek' },
-          { day: 7, title: 'Pisang to Manang', details: 'Acclimatization in Manang' },
-          { day: 8, title: 'Manang rest day', details: 'Explore village and acclimatize' },
-          { day: 9, title: 'Manang to Tangarjung', details: 'High altitude trek' },
-          { day: 10, title: 'Tangarjung to Thorong La Base', details: 'Prepare for pass crossing' },
-          { day: 11, title: 'Thorong La Pass crossing', details: 'Cross 5,416m Thorong La pass' },
-          { day: 12, title: 'Thorong La to Muktinath', details: 'Descend to sacred site' },
-          { day: 13, title: 'Muktinath to Jomsom', details: 'Apple orchard trek' },
-          { day: 14, title: 'Jomsom to Kagbeni', details: 'Final trekking days' },
-          { day: 15, title: 'Kagbeni to Pokhara', details: 'Return by bus' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
@@ -150,10 +198,6 @@ async function seed() {
           { day: 1, title: 'Kathmandu to Syabrubesi', details: 'Drive and trek to Syabrubesi' },
           { day: 2, title: 'Syabrubesi to Lama Hotel', details: 'Trek through forests' },
           { day: 3, title: 'Lama Hotel to Langtang Village', details: 'River trail trek' },
-          { day: 4, title: 'Langtang Village rest day', details: 'Explore village life' },
-          { day: 5, title: 'Langtang to Kyanjin Gumba', details: 'High altitude trek' },
-          { day: 6, title: 'Kyanjin Gumba exploration', details: 'Hike to viewpoints' },
-          { day: 7, title: 'Return to Kathmandu', details: 'Trek down and drive back' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
@@ -178,10 +222,8 @@ async function seed() {
         excludes: ['Flights', 'Personal expenses'],
         itinerary: [
           { day: 1, title: 'Pokhara to Nayapul', details: 'Drive and begin trek' },
-          { day: 2, title: 'Nayapul to Ulleri', details: 'Climb stone steps through rhododendron forests' },
-          { day: 3, title: 'Ulleri to Ghorepani', details: 'Continue climbing, reach Ghorepani' },
-          { day: 4, title: 'Poon Hill sunrise', details: 'Early morning hike to Poon Hill for sunrise' },
-          { day: 5, title: 'Ghorepani to Pokhara', details: 'Trek down and return to Pokhara' },
+          { day: 2, title: 'Nayapul to Ulleri', details: 'Climb stone steps' },
+          { day: 3, title: 'Ulleri to Ghorepani', details: 'Continue climbing' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&q=80',
@@ -207,22 +249,6 @@ async function seed() {
         itinerary: [
           { day: 1, title: 'Kathmandu to Arughat', details: 'Drive to Arughat' },
           { day: 2, title: 'Arughat to Sotikhola', details: 'Trek starts' },
-          { day: 3, title: 'Sotikhola to Machha Khola', details: 'Forest trek' },
-          { day: 4, title: 'Machha Khola to Jagat', details: 'River trail' },
-          { day: 5, title: 'Jagat to Deng', details: 'Higher altitude' },
-          { day: 6, title: 'Deng to Ngyak', details: 'Continue climbing' },
-          { day: 7, title: 'Ngyak to Sama Village', details: 'Manaslu Base Camp area' },
-          { day: 8, title: 'Sama Village rest day', details: 'Acclimatization' },
-          { day: 9, title: 'Sama to Samdo', details: 'High altitude trek' },
-          { day: 10, title: 'Samdo rest and exploration', details: 'Explore viewpoints' },
-          { day: 11, title: 'Samdo to Larke La Base', details: 'Prepare for pass' },
-          { day: 12, title: 'Larke La Pass crossing', details: 'Cross Larke La' },
-          { day: 13, title: 'Larke La to Bimtang', details: 'Descend to forest' },
-          { day: 14, title: 'Bimtang to Gho', details: 'Trek down' },
-          { day: 15, title: 'Gho to Dharapani', details: 'Final trekking days' },
-          { day: 16, title: 'Dharapani to Besisahar', details: 'Trek completion' },
-          { day: 17, title: 'Besisahar to Kathmandu', details: 'Return by bus' },
-          { day: 18, title: 'Rest day in Kathmandu', details: 'Rest and departure' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
@@ -230,7 +256,6 @@ async function seed() {
           'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
           'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&q=80',
           'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
-          'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80'
         ],
       },
       {
@@ -249,20 +274,6 @@ async function seed() {
         itinerary: [
           { day: 1, title: 'Kathmandu to Tumlingtar', details: 'Fly to Tumlingtar' },
           { day: 2, title: 'Tumlingtar to Khandbari', details: 'Trek starts' },
-          { day: 3, title: 'Khandbari to Chichila', details: 'Forest trek' },
-          { day: 4, title: 'Chichila toNum', details: 'Climb to Num' },
-          { day: 5, title: 'Num to Seduwa', details: 'Higher altitude' },
-          { day: 6, title: 'Seduwa to Tashing', details: 'Mountain views' },
-          { day: 7, title: 'Tashing to Kauma', details: 'Continue trekking' },
-          { day: 8, title: 'Kauma to Makalu Base Camp', details: 'Reach base camp' },
-          { day: 9, title: 'Makalu Base Camp rest day', details: 'Explore area' },
-          { day: 10, title: 'Return trek begins', details: 'Trek down' },
-          { day: 11, title: 'Trek down continuation', details: 'Return journey' },
-          { day: 12, title: 'Trek down to Seduwa', details: 'Descent continues' },
-          { day: 13, title: 'Seduwa to Chichila', details: 'Lower altitude' },
-          { day: 14, title: 'Chichila to Khandbari', details: 'Trek completion' },
-          { day: 15, title: 'Khandbari to Tumlingtar', details: 'Fly back' },
-          { day: 16, title: 'Tumlingtar to Kathmandu', details: 'Return to Kathmandu' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
@@ -288,26 +299,6 @@ async function seed() {
         itinerary: [
           { day: 1, title: 'Kathmandu to Lhasa', details: 'Fly to Lhasa' },
           { day: 2, title: 'Acclimatization in Lhasa', details: 'Rest and explore' },
-          { day: 3, title: 'Lhasa to Shigatse', details: 'Drive to Shigatse' },
-          { day: 4, title: 'Shigatse to Gyantse', details: 'Continue driving' },
-          { day: 5, title: 'Gyantse to Saga', details: 'Long drive' },
-          { day: 6, title: 'Saga to Hilsa', details: 'Border town' },
-          { day: 7, title: 'Hilsa to Darchen', details: 'Reach Darchen' },
-          { day: 8, title: 'Acclimatization day', details: 'Prepare for trek' },
-          { day: 9, title: 'Darchen to Diraphuk', details: 'Trek start' },
-          { day: 10, title: 'Diraphuk to Zuthulphuk', details: 'Around Kailash trek' },
-          { day: 11, title: 'Zuthulphuk to Darchen', details: 'Complete Kailash circuit' },
-          { day: 12, title: 'Darchen to Mansarovar', details: 'Trek to sacred lake' },
-          { day: 13, title: 'Mansarovar circumambulation', details: 'Sacred lake walk' },
-          { day: 14, title: 'Mansarovar rest day', details: 'Meditation and rest' },
-          { day: 15, title: 'Return to Darchen', details: 'Trek back' },
-          { day: 16, title: 'Darchen to Hilsa', details: 'Drive back' },
-          { day: 17, title: 'Hilsa to Saga', details: 'Continue driving' },
-          { day: 18, title: 'Saga to Gyantse', details: 'Long drive' },
-          { day: 19, title: 'Gyantse to Shigatse', details: 'Continue driving' },
-          { day: 20, title: 'Shigatse to Lhasa', details: 'Drive to Lhasa' },
-          { day: 21, title: 'Rest day in Lhasa', details: 'Final exploration' },
-          { day: 22, title: 'Fly back to Kathmandu', details: 'End of trek' },
         ],
         published: true,
         heroImage: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',
@@ -320,7 +311,21 @@ async function seed() {
       }
     ];
 
-    await Tour.insertMany(tours);
+    const result = await Tour.insertMany(tours);
+    console.log(`✓ insertMany returned ${result.length} documents`);
+    
+    // Verify tours were inserted one by one
+    for (const tour of tours) {
+      const found = await Tour.findOne({ slug: tour.slug });
+      if (!found) {
+        console.error(`❌ Tour not found after insert: ${tour.title}`);
+      } else {
+        console.log(`  ✓ Verified: ${found.title}`);
+      }
+    }
+    
+    const tourCount = await Tour.countDocuments();
+    console.log(`✓ Total tours in database: ${tourCount}`);
 
     // Create blog posts
     const blogPosts = [
@@ -328,7 +333,7 @@ async function seed() {
         title: 'Top 10 Trekking Tips',
         slug: 'top-10-trekking-tips',
         excerpt: 'Essential tips for your trekking adventure.',
-        content: '## Top 10 Trekking Tips for Nepal\n\n### 1. Start with Proper Acclimatization\nAcclimatization is crucial when trekking at high altitudes. Spend at least 2-3 days acclimatizing before reaching high passes.\n\n### 2. Invest in Quality Gear\nProper trekking shoes, weather-appropriate clothing, and a good backpack are essential.\n\n### 3. Stay Hydrated\nDrink plenty of water throughout your trek. It helps with acclimatization and prevents altitude sickness.\n\n### 4. Hire a Local Guide\nLocal guides know the terrain, can handle emergencies, and provide cultural insights.\n\n### 5. Start Early in the Morning\nEarly starts help you reach your destination before sunset and allow for rest days.\n\n### 6. Pace Yourself\nTrekking is not a race. Go at your own pace and enjoy the journey.\n\n### 7. Pack Light\nOnly bring essentials. A lighter backpack makes trekking easier and more enjoyable.\n\n### 8. Take Rest Days\nInclude rest days in your itinerary for acclimatization and recovery.\n\n### 9. Protect Your Feet\nWear proper socks and apply blister prevention products regularly.\n\n### 10. Respect Local Culture\nBe respectful to local communities and follow cultural norms.',
+        content: '## Top 10 Trekking Tips\n\nTrekking in the Himalayas is an amazing experience.',
         coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
         tags: ['tips', 'trekking', 'nepal'],
         published: true,
@@ -337,32 +342,15 @@ async function seed() {
         title: 'Mardi Himal: The Hidden Gem of Nepal',
         slug: 'mardi-himal-hidden-gem',
         excerpt: 'Discover why Mardi Himal is one of the most underrated treks in Nepal.',
-        content: '## Mardi Himal: Nepal\'s Hidden Gem Trek\n\nWhile many trekkers head to Everest or Annapurna Circuit, Mardi Himal remains a hidden gem offering solitude and spectacular panoramic views.\n\n### Why Choose Mardi Himal?\n\n**Short Duration**: Just 4 days from Pokhara, making it perfect for travelers with limited time.\n\n**Stunning Views**: Panoramic views of Annapurna South, Mardi, Hiunchuli, Machapuchare, and Dhaulagiri.\n\n**Solitude**: Far fewer trekkers than popular trails, allowing for a more peaceful experience.\n\n**Diverse Landscapes**: From subtropical forests to alpine meadows and high mountain peaks.\n\n### Best Time to Trek\n- Spring: March to May (clear skies, mild temperatures)\n- Autumn: September to November (crisp air, excellent visibility)\n\n### What to Expect\n- Moderate fitness required\n- Comfortable teahouse accommodations\n- Warm and welcoming local communities\n- Breathtaking sunrise and sunset views\n\nMardi Himal is perfect for those seeking authentic Himalayan experience without the crowds.',
+        content: '## Mardi Himal Trek\n\nMardi Himal is a beautiful trek.',
         coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-        tags: ['mardi-himal', 'nepal', 'trek', 'adventure'],
+        tags: ['mardi-himal', 'nepal', 'trek'],
         published: true,
       },
-      {
-        title: 'Ultimate Guide to Everest Base Camp Trek',
-        slug: 'everest-base-camp-guide',
-        excerpt: 'Everything you need to know about the iconic Everest Base Camp trek.',
-        content: '## Complete Guide to Everest Base Camp Trek\n\nThe Everest Base Camp trek is one of the world\'s most iconic treks, attracting thousands of adventurers annually.\n\n### Trek Overview\n- **Duration**: 14 days\n- **Distance**: ~130 km\n- **Maximum Altitude**: 5,545m (Everest Base Camp)\n- **Best Season**: Spring & Autumn\n\n### Day-by-Day Highlights\n- Day 1-2: Acclimatization in Namche Bazaar\n- Day 3-4: Trek through scenic forests to Tengboche\n- Day 5-6: High altitude acclimatization in Dingboche\n- Day 7-8: Final push to Everest Base Camp\n- Day 9: Visit Kalapatthar for sunrise views\n- Day 10+: Scenic descent\n\n### What to Expect\n- Modern teahouse accommodations along the route\n- Nepali and Sherpa culture\n- Stunning mountain scenery\n- Challenging altitude and weather conditions\n\n### Preparation Tips\n- Train 2-3 months before\n- Invest in quality gear\n- Get travel insurance\n- Consult with your doctor about altitude medicine\n\nThe Everest trek is a life-changing adventure that tests your limits and rewards you with incredible experiences.',
-        coverImage: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',
-        tags: ['everest', 'base-camp', 'trek', 'himalaya'],
-        published: true,
-      },
-      {
-        title: 'Langtang Valley: Valley of Glaciers',
-        slug: 'langtang-valley-trek',
-        excerpt: 'Explore the breathtaking Langtang Valley, known as the Valley of Glaciers.',
-        content: '## Langtang Valley Trek: Valley of Glaciers\n\nThe Langtang Valley trek offers stunning mountain vistas without the extreme altitude of other treks.\n\n### Why Visit Langtang Valley?\n\n**Accessibility**: Close to Kathmandu, just 2 hours of driving to reach the trailhead.\n\n**Manageable Altitude**: Maximum altitude of 3,870m, perfect for those not ready for higher elevations.\n\n**Cultural Experience**: Traditional Tamang villages with authentic mountain hospitality.\n\n**Scenic Beauty**: Snow-capped peaks, glaciers, rhododendron forests, and alpine meadows.\n\n### Trek Itinerary\nDay 1: Drive to Syabrubesi\nDay 2: Trek to Lama Hotel through forests\nDay 3: Arrive at Langtang Village\nDay 4: Rest day for exploration\nDay 5: Trek to Kyanjin Gumba\nDay 6: Explore and return to base\nDay 7: Trek down and return\n\n### Flora and Fauna\n- Pristine rhododendron and oak forests\n- Mountain goats and Himalayan wildlife\n- Diverse bird species\n\nLangtang Valley is ideal for trekkers seeking a beautiful mountain experience without extreme technical difficulty.',
-        coverImage: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
-        tags: ['langtang', 'valley', 'glacier', 'nepal'],
-        published: true,
-      }
     ];
 
     await BlogPost.insertMany(blogPosts);
+    console.log('✓ Blog posts created');
 
     // Create gallery items
     const galleryItems = [
@@ -386,55 +374,21 @@ async function seed() {
         imageUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
         category: 'Valley',
       },
-      {
-        title: 'Mountain Lake',
-        imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-        category: 'Nature',
-      },
-      {
-        title: 'Alpine Meadow',
-        imageUrl: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&q=80',
-        category: 'Landscape',
-      },
-      {
-        title: 'Snow Peaks',
-        imageUrl: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',
-        category: 'Mountain Views',
-      },
-      {
-        title: 'Forest Trail',
-        imageUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
-        category: 'Trekking',
-      },
-      {
-        title: 'Sunrise at Poon Hill',
-        imageUrl: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&q=80',
-        category: 'Adventure',
-      },
-      {
-        title: 'Himalayan Village',
-        imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-        category: 'Culture',
-      },
-      {
-        title: 'Mountain Pass',
-        imageUrl: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',
-        category: 'Trekking',
-      },
-      {
-        title: 'Valley View',
-        imageUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',
-        category: 'Landscape',
-      }
     ];
 
     await GalleryItem.insertMany(galleryItems);
+    console.log('✓ Gallery items created');
 
-    console.log('Seeding completed');
+    console.log('✅ Seeding completed successfully');
   } catch (error) {
-    console.error('Seeding failed:', error);
+    console.error('❌ Seeding failed:', error.message);
+    console.error(error);
+    process.exit(1);
   } finally {
+    // Add a small delay to ensure writes are flushed
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await mongoose.disconnect();
+    console.log('✓ Database disconnected');
   }
 }
 
