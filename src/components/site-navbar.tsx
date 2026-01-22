@@ -148,12 +148,12 @@ export function SiteNavbar() {
 
             {/* Desktop CTA Buttons */}
             <div className="hidden md:flex items-center gap-3">
-              <button className="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              <Link href="/activities" className="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                 View Packages
-              </button>
-              <button className="px-6 py-2 bg-gray-900 text-white font-medium text-sm rounded-lg hover:bg-gray-800 transition-colors">
+              </Link>
+              <Link href="/contact" className="px-6 py-2 bg-gray-900 text-white font-medium text-sm rounded-lg hover:bg-gray-800 transition-colors">
                 Book a Trip
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -238,12 +238,12 @@ export function SiteNavbar() {
 
             {/* Mobile CTA */}
             <div className="pt-4 border-t border-gray-100 space-y-2">
-              <button className="w-full px-4 py-2 text-gray-700 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors font-medium text-sm">
+              <Link href="/activities" className="block w-full px-4 py-2 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm text-center" onClick={() => setIsMobileOpen(false)}>
                 View Packages
-              </button>
-              <button className="w-full px-4 py-2 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-full hover:shadow-lg transition-shadow font-medium text-sm">
+              </Link>
+              <Link href="/contact" className="block w-full px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm text-center" onClick={() => setIsMobileOpen(false)}>
                 Book a Trip
-              </button>
+              </Link>
             </div>
           </div>
         </motion.div>
