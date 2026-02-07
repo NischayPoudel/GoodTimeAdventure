@@ -2,67 +2,79 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-interface Tour {
+interface Activity {
   _id: string
   title: string
+  activity: string
   region: string
+  durationDays: number
   difficulty: string
-  price: number
+  priceFrom: number
   published: boolean
+  createdAt: string
 }
 
-export default function AdminToursPage() {
-  const [tours, setTours] = useState<Tour[]>([])
+export default function AdminActivitiesPage() {
+  const [activities, setActivities] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const router = useRouter()
 
   useEffect(() => {
-    fetchTours()
+    fetchActivities()
   }, [])
 
-  const fetchTours = async () => {
+  const fetchActivities = async () => {
     try {
       const response = await fetch('/api/tours?admin=true')
-      if (!response.ok) throw new Error('Failed to fetch tours')
+      if (!response.ok) throw new Error('Failed to fetch activities')
       const data = await response.json()
-      setTours(data)
+      setActivities(data)
     } catch (err) {
-      setError('Failed to load tours')
+      setError('Failed to load activities')
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id: string, title: string) => {
-    if (confirm(`Are you sure you want to delete "${title}"?`)) {
+  const handleDelete = async (id: string) => {
+    if (confirm('Are you sure you want to delete this activity?')) {
       try {
         const response = await fetch(`/api/tours/${id}`, { method: 'DELETE' })
         if (response.ok) {
-          setTours(tours.filter((t) => t._id !== id))
-          alert('Tour deleted successfully')
-        } else {
-          alert('Failed to delete tour')
+          setActivities(activities.filter((a) => a._id !== id))
+          alert('Activity deleted successfully')
         }
       } catch (err) {
-        alert('Error deleting tour')
+        alert('Failed to delete activity')
         console.error(err)
       }
+    }
+  }
+
+  const difficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return 'bg-green-100 text-green-800'
+      case 'moderate':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'hard':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
     }
   }
 
   return (
     <div>
       <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Manage Tours</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Activities / Treks Management</h1>
         <Link
-          href="/admin/tours/new"
+          href="/admin/activities/new"
           className="px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition font-semibold"
         >
-          ➕ Add New Tour
+          ➕ New Activity
         </Link>
       </div>
 
@@ -74,16 +86,16 @@ export default function AdminToursPage() {
 
       {loading ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">Loading tours...</p>
+          <p className="text-gray-500">Loading activities...</p>
         </div>
-      ) : tours.length === 0 ? (
+      ) : activities.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">No tours yet</p>
+          <p className="text-gray-500 mb-4">No activities yet</p>
           <Link
-            href="/admin/tours/new"
+            href="/admin/activities/new"
             className="text-emerald-500 hover:text-emerald-600 font-semibold"
           >
-            Create your first tour
+            Create your first activity
           </Link>
         </div>
       ) : (
@@ -95,10 +107,13 @@ export default function AdminToursPage() {
                   Title
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Region
+                  Activity Type
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Difficulty
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Duration
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Price
@@ -112,34 +127,42 @@ export default function AdminToursPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {tours.map((tour) => (
-                <tr key={tour._id} className="hover:bg-gray-50">
+              {activities.map((activity) => (
+                <tr key={activity._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">{tour.title}</p>
+                    <p className="font-semibold text-gray-900">{activity.title}</p>
+                    <p className="text-sm text-gray-500">{activity.region}</p>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{tour.region}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{tour.difficulty}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">₹{tour.price}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{activity.activity}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${difficultyColor(activity.difficulty)}`}>
+                      {activity.difficulty}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{activity.durationDays} days</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-gray-900">
+                    ₹{activity.priceFrom.toLocaleString('en-IN')}
+                  </td>
                   <td className="px-6 py-4">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        tour.published
+                        activity.published
                           ? 'bg-green-100 text-green-800'
                           : 'bg-yellow-100 text-yellow-800'
                       }`}
                     >
-                      {tour.published ? 'Published' : 'Draft'}
+                      {activity.published ? 'Published' : 'Draft'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm space-x-3">
                     <Link
-                      href={`/admin/tours/${tour._id}`}
+                      href={`/admin/activities/${activity._id}`}
                       className="text-blue-600 hover:text-blue-800 font-medium"
                     >
                       Edit
                     </Link>
                     <button
-                      onClick={() => handleDelete(tour._id, tour.title)}
+                      onClick={() => handleDelete(activity._id)}
                       className="text-red-600 hover:text-red-800 font-medium"
                     >
                       Delete

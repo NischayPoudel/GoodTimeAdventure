@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { TourCard } from '@/components/TourCard'
+import { ActivityCard } from '@/components/ActivityCard'
 import { motion } from 'framer-motion'
 import { Mountain, Compass, Zap, Users } from 'lucide-react'
 
@@ -100,7 +100,7 @@ export function Activities({ tours }: ActivitiesProps) {
         >
           {filteredTours.map((tour) => (
             <motion.div key={tour._id} variants={itemVariants}>
-              <TourCard tour={tour} />
+              <ActivityCard tour={tour} />
             </motion.div>
           ))}
         </motion.div>

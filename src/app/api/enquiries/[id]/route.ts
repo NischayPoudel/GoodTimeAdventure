@@ -4,6 +4,31 @@ import { authOptions } from '@/lib/auth'
 import { connectDB } from '@/lib/db'
 import { Enquiry } from '@/lib/models/Enquiry'
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions) as any
+  if (!session || !session.user || session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const { id } = await params
+    await connectDB()
+    const enquiry = await Enquiry.findById(id)
+
+    if (!enquiry) {
+      return NextResponse.json({ error: 'Enquiry not found' }, { status: 404 })
+    }
+
+    return NextResponse.json(enquiry)
+  } catch (error) {
+    console.error('Error fetching enquiry:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -30,6 +55,31 @@ export async function PUT(
     return NextResponse.json(enquiry)
   } catch (error) {
     console.error('Error updating enquiry:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions) as any
+  if (!session || !session.user || session.user.role !== 'admin') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const { id } = await params
+    await connectDB()
+    const enquiry = await Enquiry.findByIdAndDelete(id)
+
+    if (!enquiry) {
+      return NextResponse.json({ error: 'Enquiry not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({ message: 'Enquiry deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting enquiry:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

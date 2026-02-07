@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/Card'
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions) as any
-  if (!session || !session.user || session.user.role !== 'admin') redirect('/login')
+  if (!session || !session.user || session.user.role !== 'admin') redirect('/admin-login')
 
   await connectDB()
   const [tourCount, blogCount, enquiryCount, galleryCount, recentEnquiries] = await Promise.all([

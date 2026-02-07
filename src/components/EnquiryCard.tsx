@@ -14,9 +14,10 @@ interface EnquiryCardProps {
     responded: boolean
     createdAt: Date
   }
+  onDelete?: (id: string) => void
 }
 
-export function EnquiryCard({ enquiry }: EnquiryCardProps) {
+export function EnquiryCard({ enquiry, onDelete }: EnquiryCardProps) {
   const [responded, setResponded] = useState(enquiry.responded)
   const [loading, setLoading] = useState(false)
 
@@ -41,22 +42,55 @@ export function EnquiryCard({ enquiry }: EnquiryCardProps) {
     }
   }
 
+  const handleDelete = async () => {
+    if (confirm('Are you sure you want to delete this enquiry?')) {
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/enquiries/${enquiry._id}`, {
+          method: 'DELETE',
+        })
+
+        if (response.ok) {
+          onDelete?.(enquiry._id)
+        } else {
+          alert('Failed to delete enquiry')
+        }
+      } catch (error) {
+        console.error('Error deleting enquiry:', error)
+        alert('Error deleting enquiry')
+      } finally {
+        setLoading(false)
+      }
+    }
+  }
+
   return (
     <Card className="p-4">
       <div className="flex justify-between items-start">
-        <div>
+        <div className="flex-1">
           <h2 className="font-semibold">{enquiry.fullName} - {enquiry.tourId}</h2>
-          <p>{enquiry.email}</p>
-          <p>{enquiry.message}</p>
-          <p className="text-sm text-gray-500">{new Date(enquiry.createdAt).toDateString()}</p>
+          <p className="text-sm text-gray-600">{enquiry.email}</p>
+          <p className="mt-2">{enquiry.message}</p>
+          <p className="text-xs text-gray-500 mt-2">{new Date(enquiry.createdAt).toDateString()}</p>
         </div>
-        <Button
-          variant={responded ? 'secondary' : 'default'}
-          onClick={handleMarkResponded}
-          disabled={loading || responded}
-        >
-          {loading ? 'Updating...' : responded ? 'Responded' : 'Mark Responded'}
-        </Button>
+        <div className="space-x-2 ml-4">
+          <Button
+            variant={responded ? 'secondary' : 'default'}
+            onClick={handleMarkResponded}
+            disabled={loading || responded}
+            className="text-xs"
+          >
+            {loading ? 'Updating...' : responded ? 'Responded' : 'Mark Responded'}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={loading}
+            className="text-xs"
+          >
+            Delete
+          </Button>
+        </div>
       </div>
     </Card>
   )

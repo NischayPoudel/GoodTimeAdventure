@@ -8,7 +8,12 @@ import { tourSchema } from '@/lib/validations'
 export async function GET(request: NextRequest) {
   try {
     await connectDB()
-    const tours = await Tour.find({ published: true }).sort({ createdAt: -1 })
+    const { searchParams } = new URL(request.url)
+    const adminOnly = searchParams.get('admin') === 'true'
+    
+    // Get all tours if admin=true is passed, otherwise only published
+    const query = adminOnly ? {} : { published: true }
+    const tours = await Tour.find(query).sort({ createdAt: -1 })
     return NextResponse.json(tours)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch tours' }, { status: 500 })
